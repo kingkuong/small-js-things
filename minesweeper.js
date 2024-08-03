@@ -65,33 +65,16 @@ const getNumberOfBomb = (board, i, j) => {
   return tiles.filter((tile) => tile === "💣").length;
 };
 
-const openTile = (board, maskedBoard, i, j) => {
-  if (maskedBoard[i][j] !== "🚩") {
-    maskedBoard[i][j] = board[i][j];
-  }
-};
-
-const flagTile = (board, maskedBoard, i, j) => {
-  if (maskedBoard[i][j] === "X") {
-    maskedBoard[i][j] = "🚩";
-  }
-};
-
-const unflagTile = (board, maskedBoard, i, j) => {
-  if (maskedBoard[i][j] === "🚩") {
-    maskedBoard[i][j] = "X";
-  }
-};
-
 const playGame = async () => {
   const boardSize = 6;
   const [board, maskedBoard] = createBoard(6);
-  let bombCounter = boardSize;
-  let alive = true;
   const rl = readlinePromises.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
+
+  let bombCounter = boardSize;
+  let alive = true;
 
   console.log("Welcome to small-js-thing MineSweeper. Here's your board");
   // uncomment here if you want to peak at the real board
@@ -111,17 +94,26 @@ const playGame = async () => {
       const j = parseInt(await rl.question(`What's X position?`));
 
       if (answer === "1") {
-        openTile(board, maskedBoard, i, j);
+        // open
+        if (maskedBoard[i][j] !== "🚩") {
+          maskedBoard[i][j] = board[i][j];
+        }
         if (board[i][j] === "💣") {
           alive = false;
         }
       } else if (answer === "2") {
-        flagTile(board, maskedBoard, i, j);
+        // flag
+        if (maskedBoard[i][j] === "X") {
+          maskedBoard[i][j] = "🚩";
+        }
         if (board[i][j] === "💣") {
           bombCounter -= 1;
         }
       } else if (answer === "3") {
-        unflagTile(board, maskedBoard, i, j);
+        // unflag
+        if (maskedBoard[i][j] === "🚩") {
+          maskedBoard[i][j] = "X";
+        }
         if (board[i][j] === "💣") {
           bombCounter += 1;
         }
