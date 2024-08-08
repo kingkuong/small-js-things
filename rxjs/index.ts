@@ -1,7 +1,13 @@
 class Observable<T> {
-  constructor(subscribe: void) {}
+  subscribeFunction: (subscriber: Subscriber) => void;
 
-  subscribe() {}
+  constructor(subscribeFunction: (subscriber: Subscriber) => void) {
+    this.subscribeFunction = subscribeFunction;
+  }
+
+  subscribe() {
+    this.subscribeFunction(subscriber);
+  }
   unsubscribe() {}
   pipe() {}
 }
@@ -9,41 +15,51 @@ class Observable<T> {
 interface Subscriber {
   next: (value: any) => void;
   error: (error: any) => void;
-  complete: (lastValue: any) => void;
+  complete: () => void;
 }
 
-class Opeartor {
+class Operator {
   constructor() {}
 }
 
 const subscriber: Subscriber = {
-  next: (value) => {
+  next: (value: any) => {
     console.log(value);
   },
-  error: (error) => {
+  error: (error: Error) => {
     console.error(error);
   },
-  complete: (lastValue) => {
-    console.log(lastValue);
+  complete: () => {
+    console.log("Subscription ended");
   },
 };
 
 const of = (item: any): Observable<any> => {
-  const t = new Observable((subcriber) => {
-    console.log("starting subscriber");
-    subcriber.next(item);
-    subscriber.complete();
+  return new Observable((subcriber) => {
+    try {
+      console.log("Starting subscription");
+      subcriber.next(item);
+      subscriber.complete();
+    } catch (error) {
+      subscriber.error(error);
+    }
   });
-
-  return t;
 };
 
 const from = (array: any[]): Observable<any[]> => {
-  const t = new Observable(subscriber);
-  return t;
+  return new Observable((subcriber) => {
+    try {
+      console.log("Starting subscription");
+      array.forEach((item) => {
+        subcriber.next(item);
+      });
+      subscriber.complete();
+    } catch (error) {
+      subscriber.error(error);
+    }
+  });
 };
 
-const mergeMap = (observables: Observable<any>[]): Observable<any[]> => {
-  const t = new Observable(subscriber);
-  return t;
-};
+console.log("test");
+of([1, 2, 3, 4]).subscribe();
+from([1, 2, 3, 4]).subscribe();
