@@ -1,7 +1,7 @@
 import { Observable, Subscriber } from "./observable";
 
 /*
- * Create Operators
+ * Creating Operators
  */
 export const of = (...args: any[]): Observable<any> => {
   return new Observable((subscriber) => {
@@ -17,7 +17,7 @@ export const of = (...args: any[]): Observable<any> => {
   });
 };
 
-export const from = (array: any[]): Observable<any[]> => {
+export const from = (array: any[]): Observable<any> => {
   return new Observable((subscriber) => {
     try {
       console.log("Starting subscription");
@@ -34,7 +34,7 @@ export const from = (array: any[]): Observable<any[]> => {
 export const interval = (
   timeout: number,
   maxCounter: number,
-): Observable<any[]> => {
+): Observable<any> => {
   return new Observable((subscriber) => {
     try {
       let counter = 0;
@@ -48,10 +48,40 @@ export const interval = (
 };
 
 /*
- * Transform Operators
+ * Transforming Operators
  */
-const filter = [];
-const map = [];
-const mergeMap = (observables: Observable<any>[]): Observable<any> => {
-  return new Observable((subscriber) => {});
+export const filter = () => {
+  return (source$: Observable<any>) =>
+    new Observable((subscriber) => {
+      source$.subscribe({
+        next: (value) => {
+          if (value % 2 === 0) {
+            subscriber.next(value);
+          }
+        },
+        error: (error) => {
+          subscriber.error(error);
+        },
+        complete: () => {
+          subscriber.complete();
+        },
+      });
+    });
+};
+
+export const map = () => {
+  return (source$: Observable<any>) =>
+    new Observable((subscriber) => {
+      const subscription = source$.subscribe({
+        next: (value) => {
+          subscriber.next(value * 2);
+        },
+        error: (error) => {
+          subscriber.error(error);
+        },
+        complete: () => {
+          subscriber.complete();
+        },
+      });
+    });
 };

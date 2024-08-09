@@ -11,7 +11,17 @@ export class Observable<T> {
   }
 
   unsubscribe() {}
-  pipe() {}
+
+  pipe(
+    pipeableFunctions: ((source$: Observable<T>) => Observable<T>)[],
+  ): Observable<T> {
+    let result = pipeableFunctions[0](this);
+    for (let i = 1; i < pipeableFunctions.length; i++) {
+      result = pipeableFunctions[i](result);
+    }
+
+    return result;
+  }
 }
 
 export interface Subscriber {
