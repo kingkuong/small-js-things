@@ -66,12 +66,12 @@ export const filter = (filterFn: (value: any) => boolean) => {
     });
 };
 
-export const map = (filterFn: (value: any) => any) => {
+export const map = (mapFn: (value: any) => any) => {
   return (source$: Observable) =>
     new Observable((subscriber) => {
       const subscription = source$.subscribe({
         next: (value) => {
-          subscriber.next((value = filterFn(value)));
+          subscriber.next((value = mapFn(value)));
         },
         error: (error) => {
           subscriber.error(error);
