@@ -12,12 +12,12 @@ export class Observable {
   }
 
   pipe(pipeableFunctions: ((source$: Observable) => Observable)[]): Observable {
-    let result = pipeableFunctions[0](this);
+    let destination$ = pipeableFunctions[0](this);
     for (let i = 1; i < pipeableFunctions.length; i++) {
-      result = pipeableFunctions[i](result);
+      destination$ = pipeableFunctions[i](destination$);
     }
 
-    return result;
+    return destination$;
   }
 }
 
