@@ -17,8 +17,8 @@ console.log("Example from([1,2,3])");
 from([1, 2, 3]).subscribe(genericSubscriber);
 
 console.log("Example of(1,2,3)");
-of(1, 2, 3)
-  .pipe([filter((value) => value % 2 === 0), map((value) => value + 1)])
+of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+  .pipe([filter((value) => value % 2 === 0), map((value) => value * 2)])
   .subscribe(genericSubscriber);
 
 console.log("Example interval(1000)");

@@ -47,12 +47,12 @@ export const interval = (timeout: number, maxCounter: number): Observable => {
 /*
  * Transforming Operators
  */
-export const filter = () => {
+export const filter = (filterFn: (value: any) => boolean) => {
   return (source$: Observable) =>
     new Observable((subscriber) => {
       source$.subscribe({
         next: (value) => {
-          if (value % 2 === 0) {
+          if (filterFn(value)) {
             subscriber.next(value);
           }
         },
@@ -66,12 +66,12 @@ export const filter = () => {
     });
 };
 
-export const map = () => {
+export const map = (filterFn: (value: any) => any) => {
   return (source$: Observable) =>
     new Observable((subscriber) => {
       const subscription = source$.subscribe({
         next: (value) => {
-          subscriber.next(value * 2);
+          subscriber.next((value = filterFn(value)));
         },
         error: (error) => {
           subscriber.error(error);
