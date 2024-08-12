@@ -36,6 +36,9 @@ export const interval = (timeout: number, maxCounter: number): Observable => {
     try {
       let counter = 0;
       const intervalID = setInterval(() => {
+        if (counter >= maxCounter) {
+          clearInterval(intervalID);
+        }
         subscriber.next(counter++);
       }, timeout);
     } catch (error) {
@@ -71,7 +74,50 @@ export const map = (mapFn: (value: any) => any) => {
     new Observable((subscriber) => {
       source$.subscribe({
         next: (value) => {
-          subscriber.next((value = mapFn(value)));
+          subscriber.next(mapFn(value));
+        },
+        error: (error) => {
+          subscriber.error(error);
+        },
+        complete: () => {
+          subscriber.complete();
+        },
+      });
+    });
+};
+
+export const mergeMap = (toBeMerged$: Observable) => {
+  return (source$: Observable) =>
+    new Observable((subscriber) => {
+      let _value: any = null;
+      let _value2: any = null;
+      let values = [_value, _value2];
+
+      const callback = () => {
+        // detect changes
+        if (values[0] !== _value || values[1] !== _value2) {
+          values = [_value, _value2];
+          subscriber.next(values);
+        }
+      };
+
+      source$.subscribe({
+        next: (value) => {
+          _value = value;
+          callback();
+        },
+        error: (error) => {
+          subscriber.error(error);
+        },
+        complete: () => {
+          subscriber.complete();
+        },
+      });
+
+      toBeMerged$.subscribe({
+        next: (value2) => {
+          _value2 = value2;
+          callback();
         },
         error: (error) => {
           subscriber.error(error);
