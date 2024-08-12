@@ -30,13 +30,16 @@ console.log("==========================================");
 //console.log("Example interval(500, 5)");
 //const interval$ = interval(500, 5);
 //const subscription$ = interval$.subscribe(genericSubscriber);
+// subscription ends earlier than interval ends
 //setTimeout(() => subscription$.unsubscribe(), 2000);
 
 console.log("==========================================");
 console.log("Example `mergeMap`");
+// merging 2 intervals with different callback time and max counter + react to any values updated from either of these 2 intervals
 const interval100$ = interval(100, 10);
 const interval200$ = interval(200, 5);
 const mergeMapSubscription$ = interval100$
   .pipe([mergeMap(interval200$)])
   .subscribe(genericSubscriber);
+// subscription ends later than both intervals end 10 second
 setTimeout(() => mergeMapSubscription$.unsubscribe(), 10000);

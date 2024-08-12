@@ -10,3 +10,4 @@ Features supported
 - Piping with
     - `map`
     - `filter`
+    - `mergeMap`
