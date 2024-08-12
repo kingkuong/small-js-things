@@ -3,7 +3,7 @@ import { Observable, Subscriber } from "./observable";
 /*
  * Creating Operators
  */
-export const of = (...args: any[]): Observable<any> => {
+export const of = (...args: any[]): Observable => {
   return new Observable((subscriber) => {
     try {
       console.log("Starting subscription");
@@ -17,7 +17,7 @@ export const of = (...args: any[]): Observable<any> => {
   });
 };
 
-export const from = (array: any[]): Observable<any> => {
+export const from = (array: any[]): Observable => {
   return new Observable((subscriber) => {
     try {
       console.log("Starting subscription");
@@ -31,10 +31,7 @@ export const from = (array: any[]): Observable<any> => {
   });
 };
 
-export const interval = (
-  timeout: number,
-  maxCounter: number,
-): Observable<any> => {
+export const interval = (timeout: number, maxCounter: number): Observable => {
   return new Observable((subscriber) => {
     try {
       let counter = 0;
@@ -51,7 +48,7 @@ export const interval = (
  * Transforming Operators
  */
 export const filter = () => {
-  return (source$: Observable<any>) =>
+  return (source$: Observable) =>
     new Observable((subscriber) => {
       source$.subscribe({
         next: (value) => {
@@ -70,7 +67,7 @@ export const filter = () => {
 };
 
 export const map = () => {
-  return (source$: Observable<any>) =>
+  return (source$: Observable) =>
     new Observable((subscriber) => {
       const subscription = source$.subscribe({
         next: (value) => {

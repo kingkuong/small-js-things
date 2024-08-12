@@ -1,20 +1,17 @@
-export class Observable<T> {
+export class Observable {
   initFunction: (subscriber: Subscriber) => void;
 
   constructor(initFunction: (subscriber: Subscriber) => void) {
     this.initFunction = initFunction;
   }
 
-  subscribe(subscriber: Subscriber) {
+  subscribe(subscriber: Subscriber): Subscription {
     const safeSubscriber = new SafeSubscriber(subscriber);
     this.initFunction(safeSubscriber);
+    return new Subscription(this, safeSubscriber);
   }
 
-  unsubscribe() {}
-
-  pipe(
-    pipeableFunctions: ((source$: Observable<T>) => Observable<T>)[],
-  ): Observable<T> {
+  pipe(pipeableFunctions: ((source$: Observable) => Observable)[]): Observable {
     let result = pipeableFunctions[0](this);
     for (let i = 1; i < pipeableFunctions.length; i++) {
       result = pipeableFunctions[i](result);
@@ -52,7 +49,21 @@ class SafeSubscriber implements Subscriber {
   }
 
   complete() {
-    this.subscriber.complete();
     this.isClosed = true;
+    this.subscriber.complete();
+  }
+}
+
+class Subscription {
+  observable: Observable;
+  subscriber: SafeSubscriber;
+
+  constructor(observable: Observable, subscriber: SafeSubscriber) {
+    this.observable = observable;
+    this.subscriber = subscriber;
+  }
+
+  unsubscribe() {
+    this.subscriber.complete();
   }
 }

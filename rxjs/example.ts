@@ -16,8 +16,10 @@ const genericSubscriber: Subscriber = {
 console.log("Example of(1,2,3)");
 of(1, 2, 3).pipe([filter(), map()]).subscribe(genericSubscriber);
 
-//console.log("Example from([1,2,3])");
-//from([1, 2, 3]).subscribe(genericSubscriber);
-//
-//console.log("Example interval(1000)");
-//interval(500, 5).subscribe(genericSubscriber);
+console.log("Example from([1,2,3])");
+from([1, 2, 3]).subscribe(genericSubscriber);
+
+console.log("Example interval(1000)");
+const interval$ = interval(500, 5);
+const subscription$ = interval$.subscribe(genericSubscriber);
+setTimeout(() => subscription$.unsubscribe(), 2000);
