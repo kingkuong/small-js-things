@@ -3,20 +3,6 @@ import { Observable, Subscriber } from "./observable";
 /*
  * Creating Operators
  */
-export const of = (...args: any[]): Observable => {
-  return new Observable((subscriber) => {
-    try {
-      console.log("Starting subscription");
-      for (let i = 0; i < args.length; i++) {
-        subscriber.next(args[i]);
-      }
-      subscriber.complete();
-    } catch (error) {
-      subscriber.error(error);
-    }
-  });
-};
-
 export const from = (array: any[]): Observable => {
   return new Observable((subscriber) => {
     try {
@@ -24,6 +10,20 @@ export const from = (array: any[]): Observable => {
       array.forEach((item) => {
         subscriber.next(item);
       });
+      subscriber.complete();
+    } catch (error) {
+      subscriber.error(error);
+    }
+  });
+};
+
+export const of = (...args: any[]): Observable => {
+  return new Observable((subscriber) => {
+    try {
+      console.log("Starting subscription");
+      for (let i = 0; i < args.length; i++) {
+        subscriber.next(args[i]);
+      }
       subscriber.complete();
     } catch (error) {
       subscriber.error(error);

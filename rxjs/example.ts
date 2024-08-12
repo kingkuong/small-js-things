@@ -13,11 +13,13 @@ const genericSubscriber: Subscriber = {
   },
 };
 
-console.log("Example of(1,2,3)");
-of(1, 2, 3).pipe([filter(), map()]).subscribe(genericSubscriber);
-
 console.log("Example from([1,2,3])");
 from([1, 2, 3]).subscribe(genericSubscriber);
+
+console.log("Example of(1,2,3)");
+of(1, 2, 3)
+  .pipe([filter((value) => value % 2 === 0), map((value) => value + 1)])
+  .subscribe(genericSubscriber);
 
 console.log("Example interval(1000)");
 const interval$ = interval(500, 5);
