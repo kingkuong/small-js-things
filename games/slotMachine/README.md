@@ -12,3 +12,4 @@
 * Control the winning probability (by changing content of the slot machine)
 * Payout is equal to probability & cost to play 1 game
 * The house always win ;)
+* Assuming unlimited money, the game will pay until there's a winner
